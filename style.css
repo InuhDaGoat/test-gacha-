@@ -1,0 +1,46 @@
+body {
+  margin: 0;
+  font-family: Arial;
+  background: radial-gradient(circle at top, #0a0f2c, #000);
+  color: white;
+}
+
+.container {
+  text-align: center;
+  margin-top: 50px;
+}
+
+h1 {
+  color: cyan;
+}
+
+button {
+  padding: 10px;
+  margin: 5px;
+  background: #1a1f4d;
+  color: white;
+  border: 1px solid cyan;
+  cursor: pointer;
+}
+
+button:hover {
+  background: cyan;
+  color: black;
+}
+
+input {
+  padding: 8px;
+  margin: 5px;
+  background: #111;
+  color: white;
+  border: 1px solid cyan;
+}
+
+#log {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid cyan;
+  width: 300px;
+  margin: auto;
+  padding: 10px;
+}

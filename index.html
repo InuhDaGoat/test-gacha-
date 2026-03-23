@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Space Gacha</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <h1>🌌 Space Gacha</h1>
+
+  <h3 id="banner"></h3>
+
+  <p>💎 Currency: <span id="currency"></span></p>
+  <p>🔥 Pity: <span id="pity"></span>/50</p>
+
+  <button onclick="gacha()">Single</button>
+  <button onclick="multiGacha()">Multi x10</button>
+  <button onclick="addCurrency()">+50 💎</button>
+
+  <h2 id="result">-</h2>
+
+  <div id="log"></div>
+
+  <br>
+  <a href="admin.html">Admin Panel</a>
+</div>
+
+<script src="gacha.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <h2>🔒 Admin Login</h2>
+
+  <input id="user" placeholder="Username"><br>
+  <input id="pass" type="password" placeholder="Password"><br>
+  <button onclick="login()">Login</button>
+
+  <div id="panel" style="display:none;">
+    <h3>Banner Config</h3>
+
+    <input id="banner" placeholder="Nama Banner"><br>
+    SSR Rate: <input id="ssr"><br>
+    SR Rate: <input id="sr"><br>
+    Rate Up: <input id="rateup"><br>
+
+    <button onclick="save()">Save</button>
+  </div>
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>
