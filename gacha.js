@@ -94,12 +94,10 @@ function addCurrency() {
 }
 
 function save() {
-  localStorage.setItem("currency", currency);
-  localStorage.setItem("pity", pity);
-  localStorage.setItem("history", JSON.stringify(history));
+  if (user) {
+    saveUser(user.id, currency, pity);
+  }
 }
-
-update("-");
 
 window.gacha = gacha;
 window.multiGacha = multiGacha;
