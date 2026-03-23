@@ -25,32 +25,15 @@ const supabase = window.supabase.createClient(
 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhbHNiZXJoaHNsaGJuZXNhZ2NjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNDg5MTMsImV4cCI6MjA4OTgyNDkxM30.IZzm9ukiyolJm0uUlZfGIqkRpbQvetGhCNI-bP7dtJk"
 );
 
-async function login() {
+function login() {
   let name = document.getElementById("username").value;
 
   if (!name) {
     document.getElementById("status").innerText = "Isi username dulu.";
     return;
   }
-  window.location.href = "index.html?user=" + name; 
 
-
-  document.getElementById("status").innerText = "Loading...";
-
-  let { data, error } = await supabase
-    .from("users")
-    .select("*")
-    .eq("username", name)
-    .single();
-
-  if (error) {
-    let res = await supabase.from("users").insert([
-      { username: name, currency: 100, pity: 0 }
-    ]).select().single();
-
-    data = res.data;
-  }
-
+  // langsung lempar ke index
   window.location.href = "index.html?user=" + name;
 }
 </script>
