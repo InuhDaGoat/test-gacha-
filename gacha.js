@@ -15,11 +15,15 @@ async function loadUser() {
     .from("users")
     .select("*")
     .eq("username", username)
-    .single();
+    .maybeSingle();
 
-  if (error) {
-    alert("User tidak ditemukan.");
-    return;
+  // kalau belum ada user → buat baru
+  if (!data) {
+    let res = await supabase.from("users").insert([
+      { username: username, currency: 100, pity: 0 }
+    ]).select().single();
+
+    data = res.data;
   }
 
   user = data;
