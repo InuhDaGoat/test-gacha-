@@ -9,6 +9,17 @@ let config = JSON.parse(localStorage.getItem("config")) || {
 let currency = parseInt(localStorage.getItem("currency")) || 100;
 let pity = parseInt(localStorage.getItem("pity")) || 0;
 let history = JSON.parse(localStorage.getItem("history")) || [];
+let user = null;
+
+async function start() {
+  let name = document.getElementById("username").value;
+  user = await loginUser(name);
+
+  currency = user.currency;
+  pity = user.pity;
+
+  update("-");
+}
 
 function roll() {
   let r = Math.random() * 100;
