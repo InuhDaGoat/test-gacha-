@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <h2>Login User</h2>
+
+  <input id="username" placeholder="Masukkan username"><br>
+  <button onclick="login()">Login</button>
+
+  <p id="status"></p>
+</div>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<script>
+const SUPABASE_URL = https://galsberhhslhbnesagcc.supabase.co;
+const SUPABASE_KEY = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhbHNiZXJoaHNsaGJuZXNhZ2NjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNDg5MTMsImV4cCI6MjA4OTgyNDkxM30.IZzm9ukiyolJm0uUlZfGIqkRpbQvetGhCNI-bP7dtJk;
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function login() {
+  let name = document.getElementById("username").value;
+
+  if (!name) {
+    document.getElementById("status").innerText = "Isi username dulu.";
+    return;
+  }
+
+  document.getElementById("status").innerText = "Loading...";
+
+  try {
+    let { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("username", name)
+      .single();
+
+    console.log("SELECT:", data, error);
+
+    if (error) {
+      let res = await supabase.from("users").insert([
+        { username: name, currency: 100, pity: 0 }
+      ]).select().single();
+
+      console.log("INSERT:", res);
+
+      data = res.data;
+    }
+
+    // simpan user sementara
+    localStorage.setItem("user", JSON.stringify(data));
+
+    document.getElementById("status").innerText = "Login sukses.";
+
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 1000);
+
+  } catch (err) {
+    console.error(err);
+    document.getElementById("status").innerText = "Error bro.";
+  }
+}
+
+window.login = login;
+</script>
+
+</body>
+</html>
