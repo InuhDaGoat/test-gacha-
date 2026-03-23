@@ -1,105 +1,97 @@
-let config = JSON.parse(localStorage.getItem("config")) || {
-  banner: "Galactic Banner",
-  rateSSR: 1,
-  rateSR: 9,
-  items: ["Nova","Orion","Nebula","Quasar","Vortex","Zenith","Astra","Cosmo","Luna","Sol"],
-  rateUp: "Nova"
-};
-
+let user = null;
 let currency = 0;
 let pity = 0;
-let user = null;
 
-async function start() {
-  let name = document.getElementById("username").value;
-  user = await loginUser(name);
+const params = new URLSearchParams(window.location.search);
+const username = params.get("user");
 
+if (!username) {
+  alert("Login dulu.");
+  window.location.href = "login.html";
+}
+
+async function loadUser() {
+  let { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("username", username)
+    .single();
+
+  if (error) {
+    alert("User tidak ditemukan.");
+    return;
+  }
+
+  user = data;
   currency = user.currency;
   pity = user.pity;
 
-  update("-");
+  updateUI();
 }
 
-function roll() {
-  let r = Math.random() * 100;
-
-  if (pity >= 50) {
-    pity = 0;
-    return getSSR();
-  }
-
-  if (r < config.rateSSR) return getSSR();
-  if (r < config.rateSSR + config.rateSR) return "SR ⭐";
-  return "R 🔹";
-}
-
-function getSSR() {
-  if (Math.random() < 0.5) return "SSR 🌟 RATE UP: " + config.rateUp;
-
-  let pool = config.items.filter(i => i !== config.rateUp);
-  return "SSR 🌟 " + pool[Math.floor(Math.random() * pool.length)];
-}
-
-function gacha() {
-  if (!user) return alert("login sek su");
-  if (currency < 10) return alert("Miskin.");
-
-  currency -= 10;
-  pity++;
-
-  let res = roll();
-  if (res.includes("SSR")) pity = 0;
-
-  addHistory(res);
-  update(res);
-}
-
-function multiGacha() {
-  if (currency < 100) return alert("Ga cukup.");
-
-  currency -= 100;
-  let results = [];
-
-  for (let i = 0; i < 10; i++) {
-    pity++;
-    let r = roll();
-    if (r.includes("SSR")) pity = 0;
-    results.push(r);
-    addHistory(r);
-  }
-
-  update(results.join(" | "));
-}
-
-function addHistory(r) {
-  history.unshift(r);
-  if (history.length > 50) history.pop();
-  save();
-}
-
-function update(text) {
-  document.getElementById("result").innerText = text;
+function updateUI() {
   document.getElementById("currency").innerText = currency;
   document.getElementById("pity").innerText = pity;
-  document.getElementById("banner").innerText = config.banner;
-
-  document.getElementById("log").innerHTML =
-    history.map((h,i)=>`${i+1}. ${h}`).join("<br>");
 }
 
-function addCurrency() {
-  currency += 50;
-  save();
-  update("-");
-}
+function getRandomItem() {
+  let chance = Math.random() * 100;
 
-function save() {
-  if (user) {
-    saveUser(user.id, currency, pity);
+  if (pity >= 9) {
+    pity = 0;
+    return "⭐ RATE UP ITEM";
   }
+
+  if (chance < 20) {
+    pity = 0;
+    return "⭐ RATE UP ITEM";
+  }
+
+  pity++;
+  return "Item Biasa";
 }
 
-window.start = start;
+async function gacha() {
+  if (currency <= 0) return alert("Habis.");
+
+  currency--;
+  let item = getRandomItem();
+
+  document.getElementById("result").innerText = item;
+
+  await save();
+  updateUI();
+}
+
+async function multiGacha() {
+  if (currency < 10) return alert("Butuh 10.");
+
+  let hasil = [];
+
+  for (let i = 0; i < 10; i++) {
+    currency--;
+    hasil.push(getRandomItem());
+  }
+
+  document.getElementById("result").innerText = hasil.join(", ");
+
+  await save();
+  updateUI();
+}
+
+async function save() {
+  let { error } = await supabase
+    .from("users")
+    .update({
+      currency: currency,
+      pity: pity
+    })
+    .eq("id", user.id);
+
+  console.log("SAVE:", error ? error : "OK");
+}
+
+loadUser();
+
 window.gacha = gacha;
 window.multiGacha = multiGacha;
-window.addCurrency = addCurrency;
