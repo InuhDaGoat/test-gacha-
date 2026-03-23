@@ -6,9 +6,8 @@ let config = JSON.parse(localStorage.getItem("config")) || {
   rateUp: "Nova"
 };
 
-let currency = parseInt(localStorage.getItem("currency")) || 100;
-let pity = parseInt(localStorage.getItem("pity")) || 0;
-let history = JSON.parse(localStorage.getItem("history")) || [];
+let currency = 0;
+let pity = 0;
 let user = null;
 
 async function start() {
@@ -42,6 +41,7 @@ function getSSR() {
 }
 
 function gacha() {
+  if (!user) return alert("login sek su");
   if (currency < 10) return alert("Miskin.");
 
   currency -= 10;
