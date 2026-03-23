@@ -16,13 +16,8 @@
       margin: 5px;
       width: 220px;
     }
-    button {
-      cursor: pointer;
-    }
-    #status {
-      margin-top: 15px;
-      color: #f00;
-    }
+    button { cursor: pointer; }
+    #status { margin-top: 15px; color: #f00; }
   </style>
 </head>
 <body>
@@ -34,16 +29,16 @@
 <button onclick="signup()">Register</button>
 <p id="status"></p>
 
-<!-- Supabase v2 library -->
+<!-- Supabase v2 global bundle -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
 <script>
+  // Initialize Supabase
   const SUPABASE_URL = "https://galsberhhslhbnesagcc.supabase.co";
   const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhbHNiZXJoaHNsaGJuZXNhZ2NjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNDg5MTMsImV4cCI6MjA4OTgyNDkxM30.IZzm9ukiyolJm0uUlZfGIqkRpbQvetGhCNI-bP7dtJk";
 
-  // buat instance global
+  // Assign supabase client to window so global
   window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  // Login function
   async function login() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
@@ -58,8 +53,8 @@
       status.innerText = "Loading...";
       console.log("Kirim request login...");
       const { data, error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: password
+        email,
+        password
       });
 
       console.log("DATA:", data, "ERROR:", error);
@@ -69,16 +64,15 @@
         return;
       }
 
-      // Redirect ke index
+      // redirect ke index.html
       window.location.href = "index.html";
 
     } catch (err) {
       console.error(err);
-      status.innerText = "Error: " + err.message;
+      status.innerText = "Error JS: " + err.message;
     }
   }
 
-  // Register function
   async function signup() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
@@ -92,8 +86,8 @@
     try {
       status.innerText = "Loading...";
       const { data, error } = await supabase.auth.signUp({
-        email: email,
-        password: password
+        email,
+        password
       });
 
       console.log("DATA:", data, "ERROR:", error);
@@ -107,11 +101,11 @@
 
     } catch (err) {
       console.error(err);
-      status.innerText = "Error: " + err.message;
+      status.innerText = "Error JS: " + err.message;
     }
   }
 
-  // expose functions untuk HTML
+  // expose functions for HTML buttons
   window.login = login;
   window.signup = signup;
 </script>
