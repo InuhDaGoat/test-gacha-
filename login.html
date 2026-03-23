@@ -1,72 +1,120 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Space Gacha Login</title>
   <style>
-    body { background:black; color:white; font-family:Arial; text-align:center; }
-    .box { margin-top: 100px; }
-    input, button { padding:10px; margin:5px; width:200px; }
+    body {
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding-top: 100px;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px;
+      width: 220px;
+    }
+    button {
+      cursor: pointer;
+    }
+    #status {
+      margin-top: 15px;
+      color: #f00;
+    }
   </style>
 </head>
 <body>
-<div class="box">
-  <h2>🚀 Space Gacha Login</h2>
-  <input id="email" placeholder="Email" type="email"><br>
-  <input id="password" placeholder="Password" type="password"><br>
-  <button onclick="login()">Login</button>
-  <button onclick="signup()">Register</button>
-  <p id="status"></p>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-<script src="supabase.js"></script>
+<h2>🚀 Space Gacha Login</h2>
+<input type="email" id="email" placeholder="Email"><br>
+<input type="password" id="password" placeholder="Password"><br>
+<button onclick="login()">Login</button>
+<button onclick="signup()">Register</button>
+<p id="status"></p>
+
+<!-- Supabase v2 library -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-async function login() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  // Initialize Supabase client
+  const SUPABASE_URL = "https://galsberhhslhbnesagcc.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhbHNiZXJoaHNsaGJuZXNhZ2NjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNDg5MTMsImV4cCI6MjA4OTgyNDkxM30.IZzm9ukiyolJm0uUlZfGIqkRpbQvetGhCNI-bP7dtJk";
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  if (!email || !password) {
-    alert("Isi semua field dulu!");
-    return;
-  }
+  // Login function
+  async function login() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const status = document.getElementById("status");
 
-  try {
-    console.log("Kirim request login ke Supabase...");
-    
-    // Supabase v2 syntax
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password
-    });
-
-    console.log("Response data:", data, "Error:", error);
-
-    if (error) {
-      alert("Login gagal: " + error.message);
+    if (!email || !password) {
+      status.innerText = "Isi email dan password!";
       return;
     }
 
-    // Kalau sukses, redirect otomatis
-    window.location.href = "index.html";
+    try {
+      status.innerText = "Loading...";
+      console.log("Kirim request login...");
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password
+      });
 
-  } catch (err) {
-    alert("Error JS: " + err.message);
+      console.log("DATA:", data, "ERROR:", error);
+
+      if (error) {
+        status.innerText = error.message;
+        return;
+      }
+
+      // Redirect ke index
+      window.location.href = "index.html";
+
+    } catch (err) {
+      console.error(err);
+      status.innerText = "Error: " + err.message;
+    }
   }
-}
 
-async function signup() {
-  let email = document.getElementById("email").value;
-  let password = document.getElementById("password").value;
+  // Register function
+  async function signup() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const status = document.getElementById("status");
 
-  if (!email || !password) { document.getElementById("status").innerText = "Isi semua!"; return; }
+    if (!email || !password) {
+      status.innerText = "Isi email dan password!";
+      return;
+    }
 
-  document.getElementById("status").innerText = "Loading...";
-  const { data, error } = await supabase.auth.signUp({ email, password });
+    try {
+      status.innerText = "Loading...";
+      const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password
+      });
 
-  if (error) { document.getElementById("status").innerText = error.message; return; }
+      console.log("DATA:", data, "ERROR:", error);
 
-  document.getElementById("status").innerText = "Registrasi berhasil! Login sekarang.";
-}
+      if (error) {
+        status.innerText = error.message;
+        return;
+      }
+
+      status.innerText = "Registrasi berhasil! Silakan login.";
+
+    } catch (err) {
+      console.error(err);
+      status.innerText = "Error: " + err.message;
+    }
+  }
+
+  // expose functions untuk HTML
+  window.login = login;
+  window.signup = signup;
 </script>
+
 </body>
 </html>
