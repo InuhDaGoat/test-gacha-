@@ -22,17 +22,36 @@
 <script src="supabase.js"></script>
 <script>
 async function login() {
-  let email = document.getElementById("email").value;
-  let password = document.getElementById("password").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-  if (!email || !password) { document.getElementById("status").innerText = "Isi semua!"; return; }
+  if (!email || !password) {
+    alert("Isi semua field dulu!");
+    return;
+  }
 
-  document.getElementById("status").innerText = "Loading...";
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  try {
+    console.log("Kirim request login ke Supabase...");
+    
+    // Supabase v2 syntax
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password
+    });
 
-  if (error) { document.getElementById("status").innerText = error.message; return; }
+    console.log("Response data:", data, "Error:", error);
 
-  window.location.href = "index.html"; // redirect otomatis
+    if (error) {
+      alert("Login gagal: " + error.message);
+      return;
+    }
+
+    // Kalau sukses, redirect otomatis
+    window.location.href = "index.html";
+
+  } catch (err) {
+    alert("Error JS: " + err.message);
+  }
 }
 
 async function signup() {
