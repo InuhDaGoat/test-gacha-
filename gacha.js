@@ -99,6 +99,7 @@ function save() {
   }
 }
 
+window.start = start;
 window.gacha = gacha;
 window.multiGacha = multiGacha;
 window.addCurrency = addCurrency;
