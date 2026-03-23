@@ -35,13 +35,13 @@
 <p id="status"></p>
 
 <!-- Supabase v2 library -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
 <script>
-  // Initialize Supabase client
   const SUPABASE_URL = "https://galsberhhslhbnesagcc.supabase.co";
   const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhbHNiZXJoaHNsaGJuZXNhZ2NjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNDg5MTMsImV4cCI6MjA4OTgyNDkxM30.IZzm9ukiyolJm0uUlZfGIqkRpbQvetGhCNI-bP7dtJk";
-  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  // buat instance global
+  window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   // Login function
   async function login() {
