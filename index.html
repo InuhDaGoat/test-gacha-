@@ -3,27 +3,21 @@
 <head>
   <title>Space Gacha</title>
   <style>
-    body { background:black; color:white; text-align:center; font-family:Arial; }
+    body { background:black; color:white; font-family:Arial; text-align:center; }
     button { padding:10px; margin:5px; }
   </style>
 </head>
 <body>
-
 <h2>🌌 Space Gacha</h2>
-
 <div>Currency: <span id="currency"></span></div>
 <div>Pity: <span id="pity"></span></div>
-
 <br>
-
 <button onclick="gacha()">Gacha</button>
 <button onclick="multiGacha()">Multi x10</button>
-
 <h3 id="result"></h3>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script src="supabase.js"></script>
 <script src="gacha.js"></script>
-
 </body>
 </html>
