@@ -1,42 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Login</title>
+  <title>Space Gacha Login</title>
   <style>
-    body { background: black; color: white; font-family: Arial; text-align:center; }
+    body { background:black; color:white; font-family:Arial; text-align:center; }
     .box { margin-top: 100px; }
-    input, button { padding:10px; margin:5px; }
+    input, button { padding:10px; margin:5px; width:200px; }
   </style>
 </head>
 <body>
-
 <div class="box">
   <h2>🚀 Space Gacha Login</h2>
-  <input id="username" placeholder="Username"><br>
+  <input id="email" placeholder="Email" type="email"><br>
+  <input id="password" placeholder="Password" type="password"><br>
   <button onclick="login()">Login</button>
+  <button onclick="signup()">Register</button>
   <p id="status"></p>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
+<script src="supabase.js"></script>
 <script>
-const supabase = window.supabase.createClient(
-"https://galsberhhslhbnesagcc.supabase.co",
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdhbHNiZXJoaHNsaGJuZXNhZ2NjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNDg5MTMsImV4cCI6MjA4OTgyNDkxM30.IZzm9ukiyolJm0uUlZfGIqkRpbQvetGhCNI-bP7dtJk"
-);
+async function login() {
+  let email = document.getElementById("email").value;
+  let password = document.getElementById("password").value;
 
-function login() {
-  let name = document.getElementById("username").value;
+  if (!email || !password) { document.getElementById("status").innerText = "Isi semua!"; return; }
 
-  if (!name) {
-    document.getElementById("status").innerText = "Isi username dulu.";
-    return;
-  }
+  document.getElementById("status").innerText = "Loading...";
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-  // langsung lempar ke index
-  window.location.href = "index.html?user=" + name;
+  if (error) { document.getElementById("status").innerText = error.message; return; }
+
+  window.location.href = "index.html"; // redirect otomatis
+}
+
+async function signup() {
+  let email = document.getElementById("email").value;
+  let password = document.getElementById("password").value;
+
+  if (!email || !password) { document.getElementById("status").innerText = "Isi semua!"; return; }
+
+  document.getElementById("status").innerText = "Loading...";
+  const { data, error } = await supabase.auth.signUp({ email, password });
+
+  if (error) { document.getElementById("status").innerText = error.message; return; }
+
+  document.getElementById("status").innerText = "Registrasi berhasil! Login sekarang.";
 }
 </script>
-
 </body>
 </html>
